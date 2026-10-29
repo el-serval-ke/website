@@ -1,17 +1,38 @@
 import type { Handle } from '@sveltejs/kit';
-import { building } from '$app/environment';
-import { auth } from '$lib/server/auth';
-import { svelteKitHandler } from 'better-auth/svelte-kit';
+import PocketBase from 'pocketbase';
+import { env } from '$env/dynamic/private';
 
-const handleBetterAuth: Handle = async ({ event, resolve }) => {
-	const session = await auth.api.getSession({ headers: event.request.headers });
+export const handle: Handle = async ({ event, resolve }) => {
+	const pbUrl = env.POCKETBASE_URL || 'http://127.0.0.1:8090';
+	event.locals.pb = new PocketBase(pbUrl);
 
-	if (session) {
-		event.locals.session = session.session;
-		event.locals.user = session.user;
+	// Load auth state from cookie
+	event.locals.pb.authStore.loadFromCookie(event.request.headers.get('cookie') || '');
+
+	try {
+		if (event.locals.pb.authStore.isValid) {
+			// In PocketBase v0.23+/v0.40+, superusers are under _superusers collection
+			await event.locals.pb.collection('_superusers').authRefresh();
+		}
+	} catch {
+		// Clear auth if refresh fails
+		event.locals.pb.authStore.clear();
 	}
 
-	return svelteKitHandler({ event, resolve, auth, building });
-};
+	event.locals.user = event.locals.pb.authStore.record;
 
-export const handle: Handle = handleBetterAuth;
+	const response = await resolve(event);
+
+	// Send updated auth cookie back to client
+	response.headers.append(
+		'set-cookie',
+		event.locals.pb.authStore.exportToCookie({
+			httpOnly: true,
+			secure: false,
+			sameSite: 'lax',
+			path: '/'
+		})
+	);
+
+	return response;
+};

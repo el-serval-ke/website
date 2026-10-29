@@ -2,13 +2,15 @@
 	import './layout.css';
 	import Navbar from '$lib/components/Navbar.svelte';
 	import Footer from '$lib/components/Footer.svelte';
+	import { page } from '$app/state';
 
 	let { children } = $props();
+	let isAdmin = $derived(page.url.pathname.startsWith('/admin'));
 </script>
 
 <svelte:head>
 	<!-- Favicon -->
-	<link rel="icon" href="favicon.ico" />
+	<link rel="icon" href="/favicon.ico" />
 	<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
 	<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
 	<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
@@ -26,12 +28,18 @@
 	Skip to main content
 </a>
 
-<div
-	class="flex min-h-screen flex-col bg-base text-text-main selection:bg-[#ea9c5a] selection:text-base"
->
-	<Navbar />
-	<main id="main-content" class="grow focus:outline-none" tabindex="-1">
+{#if isAdmin}
+	<div class="min-h-screen bg-[#140b04] text-text-main selection:bg-[#ea9c5a] selection:text-base">
 		{@render children()}
-	</main>
-	<Footer />
-</div>
+	</div>
+{:else}
+	<div
+		class="flex min-h-screen flex-col bg-base text-text-main selection:bg-[#ea9c5a] selection:text-base"
+	>
+		<Navbar />
+		<main id="main-content" class="grow focus:outline-none" tabindex="-1">
+			{@render children()}
+		</main>
+		<Footer />
+	</div>
+{/if}
