@@ -29,3 +29,10 @@ vite.config.ts.timestamp-*
 /el
 
 diff.txt
+
+*.db
+*.log
+*.db*
+*.shm
+*.zip
+
