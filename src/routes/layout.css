@@ -1,0 +1,97 @@
+@import 'tailwindcss';
+@plugin '@tailwindcss/forms';
+@plugin '@tailwindcss/typography';
+
+@theme {
+	--color-serval-50: rgb(253, 246, 238);
+	--color-serval-100: rgb(251, 231, 205);
+	--color-serval-200: rgb(246, 204, 155);
+	--color-serval-300: rgb(240, 171, 91);
+	--color-serval-400: rgb(234, 143, 44);
+	--color-serval-500: rgb(160, 90, 44);
+	--color-serval-600: rgb(130, 68, 30);
+	--color-serval-700: rgb(101, 50, 20);
+	--color-serval-800: rgb(75, 35, 14);
+	--color-serval-900: rgb(52, 22, 8);
+
+	--color-base: #0e1010;
+	--color-surface: #151817;
+	--color-surface-card: #191d1b;
+	--color-surface-hover: #1f2522;
+	--color-border-subtle: #242a27;
+	--color-border-strong: #36403c;
+	--color-text-main: #f0ede4;
+	--color-text-muted: #9ba199;
+	--color-text-dim: #888f86;
+
+	--font-serif: 'Bitter', Georgia, serif;
+	--font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+	--font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
+}
+
+:root {
+	color-scheme: dark;
+}
+
+html {
+	scroll-behavior: smooth;
+	background-color: #0e1010;
+	color: #f0ede4;
+}
+
+/* Accessibility: High-contrast focus indicator for keyboard navigation */
+:focus-visible {
+	outline: 2px solid #ea9c5a !important;
+	outline-offset: 2px !important;
+}
+
+/* Respect reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+	*,
+	::before,
+	::after {
+		animation-duration: 0.01ms !important;
+		animation-iteration-count: 1 !important;
+		transition-duration: 0.01ms !important;
+		scroll-behavior: auto !important;
+	}
+}
+
+/* Custom sharp scrollbar */
+::-webkit-scrollbar {
+	width: 6px;
+	height: 6px;
+}
+
+::-webkit-scrollbar-track {
+	background: #0e1010;
+}
+
+::-webkit-scrollbar-thumb {
+	background: #242a27;
+	border-radius: 0;
+}
+
+::-webkit-scrollbar-thumb:hover {
+	background: #36403c;
+}
+
+/* Futuristic edge utilities */
+.chamfer-tr {
+	clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 0 100%);
+}
+
+.chamfer-br {
+	clip-path: polygon(0 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%);
+}
+
+.chamfer-both {
+	clip-path: polygon(
+		0 0,
+		calc(100% - 12px) 0,
+		100% 12px,
+		100% 100%,
+		12px 100%,
+		0 calc(100% - 12px)
+	);
+}
