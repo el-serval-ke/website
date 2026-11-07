@@ -40,7 +40,16 @@
 		showModal = true;
 	}
 
-	function openEdit(cat: any) {
+	interface CategoryItem {
+		id: string;
+		title: string;
+		slug: string;
+		description: string;
+		featured_image: string;
+		blogsCount: number;
+	}
+
+	function openEdit(cat: CategoryItem) {
 		editId = cat.id;
 		editTitle = cat.title;
 		editSlug = cat.slug;
@@ -56,8 +65,8 @@
 	}
 
 	let filteredCategories = $derived(
-		data.categories.filter(
-			(c: any) =>
+		(data.categories as CategoryItem[]).filter(
+			(c) =>
 				c.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
 				c.slug.toLowerCase().includes(searchQuery.toLowerCase())
 		)
@@ -138,7 +147,7 @@
 						</tr>
 					</thead>
 					<tbody class="divide-y divide-[#2d180a]">
-						{#each filteredCategories as cat}
+						{#each filteredCategories as cat (cat.id)}
 							<tr class="transition-colors hover:bg-[#1e1006]/50">
 								<td class="px-4 py-3 font-medium text-[#f3ede8]">
 									<div class="flex items-center gap-3">

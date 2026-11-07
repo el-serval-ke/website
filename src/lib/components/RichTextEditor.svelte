@@ -1,6 +1,13 @@
 <script lang="ts">
 	import { onMount, onDestroy } from 'svelte';
 
+	interface TinyMceInstance {
+		setContent: (c: string) => void;
+		getContent: () => string;
+		destroy: () => void;
+		on: (events: string, callback: () => void) => void;
+	}
+
 	interface Props {
 		id?: string;
 		value?: string;
@@ -22,7 +29,7 @@
 	}: Props = $props();
 
 	let containerEl: HTMLTextAreaElement | null = $state(null);
-	let editorInstance: any = null;
+	let editorInstance: TinyMceInstance | null = null;
 	let isReady = $state(false);
 
 	function loadScript(src: string): Promise<void> {
@@ -51,6 +58,7 @@
 			if (!window.tinymce) return;
 
 			window.tinymce.init({
+				license_key: 'gpl',
 				target: containerEl,
 				base_url: '/tinymce',
 				suffix: '.min',
@@ -66,18 +74,19 @@
 				menubar: false,
 				branding: false,
 				promotion: false,
-				setup: (editor: any) => {
-					editorInstance = editor;
+				setup: (editor: unknown) => {
+					const inst = editor as TinyMceInstance;
+					editorInstance = inst;
 
-					editor.on('init', () => {
+					inst.on('init', () => {
 						isReady = true;
 						if (value) {
-							editor.setContent(value);
+							inst.setContent(value);
 						}
 					});
 
-					editor.on('change input undo redo SetContent', () => {
-						const content = editor.getContent();
+					inst.on('change input undo redo SetContent', () => {
+						const content = inst.getContent();
 						value = content;
 						if (onchange) onchange(content);
 					});
@@ -102,7 +111,9 @@
 		if (editorInstance) {
 			try {
 				editorInstance.destroy();
-			} catch (_) {}
+			} catch {
+				// Destroy safely
+			}
 			editorInstance = null;
 		}
 	});

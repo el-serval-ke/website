@@ -1,6 +1,9 @@
 <script lang="ts">
 	import NextMoveCta from '$lib/components/NextMoveCta.svelte';
-	import { services } from '$lib/data/services';
+	import { services as fallbackServices } from '$lib/data/services';
+
+	let { data } = $props();
+	let services = $derived(data.services || fallbackServices);
 
 	const situations = [
 		{

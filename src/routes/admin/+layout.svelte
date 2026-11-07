@@ -66,7 +66,7 @@
 
 				<!-- Navigation -->
 				<nav class="space-y-1 p-4" aria-label="Admin Navigation">
-					{#each navItems as item}
+					{#each navItems as item (item.href)}
 						{@const active = isActive(item.href)}
 						<a
 							href={item.href}
@@ -157,7 +157,7 @@
 					aria-label="Mobile Navigation"
 				>
 					<nav class="space-y-1">
-						{#each navItems as item}
+						{#each navItems as item (item.href)}
 							{@const active = isActive(item.href)}
 							<a
 								href={item.href}

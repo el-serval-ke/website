@@ -77,7 +77,7 @@ export interface PortfolioItem {
 	slug: string;
 	client?: PortfolioClient;
 	description?: string;
-	category?: string;
+	category?: string[];
 	tags?: string[];
 	featured_image?: string;
 	link?: string;
@@ -87,6 +87,9 @@ export interface PortfolioItem {
 	end_date?: string;
 	status?: PortfolioStatus;
 	client_testimonial?: string;
+	expand?: {
+		category?: Service[];
+	};
 	created: string;
 	updated: string;
 }

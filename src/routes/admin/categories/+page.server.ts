@@ -31,7 +31,7 @@ export const load: PageServerLoad = async ({ locals }) => {
 				updated: c.updated
 			}))
 		};
-	} catch (err: any) {
+	} catch (err: unknown) {
 		console.error('Error loading blog categories:', err);
 		return { categories: [] };
 	}
@@ -67,9 +67,10 @@ export const actions: Actions = {
 			}
 
 			return { success: true };
-		} catch (err: any) {
+		} catch (err: unknown) {
 			console.error('Save category error:', err);
-			return fail(400, { error: err?.message || 'Failed to save category.' });
+			const msg = err instanceof Error ? err.message : 'Failed to save category.';
+			return fail(400, { error: msg });
 		}
 	},
 
@@ -84,9 +85,10 @@ export const actions: Actions = {
 		try {
 			await locals.pb.collection('blog_categories').delete(id);
 			return { success: true };
-		} catch (err: any) {
+		} catch (err: unknown) {
 			console.error('Delete category error:', err);
-			return fail(400, { error: err?.message || 'Failed to delete category.' });
+			const msg = err instanceof Error ? err.message : 'Failed to delete category.';
+			return fail(400, { error: msg });
 		}
 	}
 };

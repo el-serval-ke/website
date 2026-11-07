@@ -1,28 +1,5 @@
 <script lang="ts">
 	import NextMoveCta from '$lib/components/NextMoveCta.svelte';
-
-	const engagementSteps = [
-		{
-			id: '01',
-			title: 'Understand',
-			desc: 'A conversation about your business, your customers and what is getting in the way.'
-		},
-		{
-			id: '02',
-			title: 'Map the work',
-			desc: 'A clear scope, priorities, indicative timing and a quote to approve before work starts.'
-		},
-		{
-			id: '03',
-			title: 'Build & check',
-			desc: 'Focused implementation with visible checkpoints and testing against the agreed scope.'
-		},
-		{
-			id: '04',
-			title: 'Hand over well',
-			desc: 'A practical walkthrough, useful documentation and a plan for ongoing care if you need it.'
-		}
-	];
 </script>
 
 <svelte:head>

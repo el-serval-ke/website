@@ -40,9 +40,13 @@ export const actions: Actions = {
 				sameSite: 'lax',
 				maxAge: 60 * 60 * 24 * 7 // 7 days
 			});
-		} catch (err: any) {
+		} catch (err: unknown) {
+			const msg =
+				err instanceof Error
+					? err.message
+					: 'Invalid administrator credentials. Please check and retry.';
 			return fail(401, {
-				error: err?.message || 'Invalid administrator credentials. Please check and retry.'
+				error: msg
 			});
 		}
 

@@ -167,7 +167,7 @@
 						No blog posts yet. Click "+ New Blog" to create one.
 					</div>
 				{:else}
-					{#each data.recentBlogs as blog}
+					{#each data.recentBlogs as blog (blog.id)}
 						<div class="flex items-center justify-between py-3.5">
 							<div class="min-w-0 pr-4">
 								<a
@@ -214,7 +214,7 @@
 						No portfolio items yet. Click "+ New Portfolio" to add one.
 					</div>
 				{:else}
-					{#each data.recentPortfolio as item}
+					{#each data.recentPortfolio as item (item.id)}
 						<div class="flex items-center justify-between py-3.5">
 							<div class="min-w-0 pr-4">
 								<a
@@ -274,7 +274,7 @@
 					</tr>
 				</thead>
 				<tbody class="divide-y divide-[#2d180a]">
-					{#each data.services as service}
+					{#each data.services as service (service.id)}
 						<tr class="transition-colors hover:bg-[#1e1006]/50">
 							<td class="py-3 pr-4 font-medium text-[#f3ede8]">
 								<a href={`/admin/services/${service.id}`} class="hover:text-[#ea9c5a]">

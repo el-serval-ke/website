@@ -11,7 +11,8 @@ export const load: PageServerLoad = async ({ locals }) => {
 				sort: 'title'
 			}),
 			locals.pb.collection('portfolio_items').getList(1, 5, {
-				sort: '-created'
+				sort: '-created',
+				expand: 'category'
 			}),
 			locals.pb.collection('services').getList(1, 10, {
 				sort: '-created'
@@ -32,15 +33,21 @@ export const load: PageServerLoad = async ({ locals }) => {
 				category: b.expand?.category?.title || 'Uncategorized',
 				created: b.created
 			})),
-			recentPortfolio: portfolioRes.items.map((p) => ({
-				id: p.id,
-				title: p.title,
-				slug: p.slug,
-				category: p.category || 'General',
-				status: p.status || 'ongoing',
-				clientName: p.client?.company || p.client?.name || 'Client',
-				created: p.created
-			})),
+			recentPortfolio: portfolioRes.items.map((p) => {
+				const categoryStr = Array.isArray(p.expand?.category)
+					? (p.expand.category as Array<{ title: string }>).map((s) => s.title).join(', ')
+					: (p.expand?.category as { title?: string } | undefined)?.title || 'General';
+
+				return {
+					id: p.id,
+					title: p.title,
+					slug: p.slug,
+					category: categoryStr,
+					status: p.status || 'ongoing',
+					clientName: p.client?.company || p.client?.name || 'Client',
+					created: p.created
+				};
+			}),
 			services: servicesRes.items.map((s) => ({
 				id: s.id,
 				title: s.title,
@@ -49,7 +56,7 @@ export const load: PageServerLoad = async ({ locals }) => {
 				pricePeriod: s.price_period || ''
 			}))
 		};
-	} catch (err: any) {
+	} catch (err: unknown) {
 		console.error('Error fetching admin dashboard data:', err);
 		return {
 			stats: { blogsCount: 0, categoriesCount: 0, portfolioCount: 0, servicesCount: 0 },

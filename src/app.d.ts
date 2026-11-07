@@ -13,6 +13,13 @@ declare global {
 		// interface PageState {}
 		// interface Platform {}
 	}
+
+	interface Window {
+		tinymce?: {
+			init: (config: Record<string, unknown>) => void;
+			[key: string]: unknown;
+		};
+	}
 }
 
 export {};

@@ -1,17 +1,9 @@
 <script lang="ts">
-	import { page } from '$app/state';
-	import { error } from '@sveltejs/kit';
 	import SearchConsoleWidget from '$lib/components/SearchConsoleWidget.svelte';
 	import NextMoveCta from '$lib/components/NextMoveCta.svelte';
-	import { services, type Service } from '$lib/data/services';
 
-	let service = $derived.by<Service>(() => {
-		const s = services.find((item) => item.slug === page.params.slug);
-		if (!s) {
-			throw error(404, 'Service not found');
-		}
-		return s;
-	});
+	let { data } = $props();
+	let service = $derived(data.service);
 
 	let openFaq = $state<number | null>(null);
 
@@ -128,7 +120,7 @@
 								Included in scope:
 							</div>
 							<ul class="space-y-2.5">
-								{#each service.scope as item}
+								{#each service.scope as item (item)}
 									<li class="flex items-center gap-2.5 text-sm text-text-main">
 										<span class="font-bold text-[#ea9c5a]">✓</span>
 										<span>{item}</span>
