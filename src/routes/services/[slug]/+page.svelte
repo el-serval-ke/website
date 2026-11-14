@@ -147,6 +147,25 @@
 	</div>
 </section>
 
+{#if service.descriptionHtml}
+	<!-- Detailed Service Description from PocketBase TinyMCE -->
+	<section class="border-b border-border-subtle/80 py-16 sm:py-24">
+		<div class="mx-auto max-w-360 px-4 sm:px-6 lg:px-12">
+			<div class="max-w-3xl">
+				<div class="mb-4 font-mono text-xs font-semibold tracking-wider text-[#ea9c5a] uppercase">
+					Service Scope & Methodology
+				</div>
+				<div
+					class="prose max-w-none font-sans leading-relaxed text-base text-text-muted prose-invert sm:text-lg [&_h2]:mb-4 [&_h2]:font-serif [&_h2]:text-2xl [&_h2]:font-bold [&_h2]:text-text-main sm:[&_h2]:text-3xl [&_h3]:mt-8 [&_h3]:mb-3 [&_h3]:font-serif [&_h3]:text-xl [&_h3]:font-bold [&_h3]:text-[#f6cc9b] [&_li]:text-text-main [&_p]:mb-4 [&_ul]:my-4 [&_ul]:list-disc [&_ul]:space-y-2 [&_ul]:pl-5"
+				>
+					<!-- eslint-disable-next-line svelte/no-at-html-tags -->
+					{@html service.descriptionHtml}
+				</div>
+			</div>
+		</div>
+	</section>
+{/if}
+
 <!-- Deliverables Section with Sharp Borders -->
 <section class="border-b border-border-subtle/80 py-16 sm:py-24">
 	<div class="mx-auto max-w-360 px-4 sm:px-6 lg:px-12">

@@ -4,6 +4,7 @@ export interface Service {
 	title: string;
 	tagline: string;
 	summary: string;
+	descriptionHtml?: string;
 	audience: string;
 	priceRange: string;
 	pricePeriod: string;

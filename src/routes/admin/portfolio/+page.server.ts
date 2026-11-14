@@ -16,10 +16,11 @@ export const load: PageServerLoad = async ({ locals, url }) => {
 
 		return {
 			portfolioItems: result.items.map((p) => {
-				const serviceCategories: string[] = Array.isArray(p.expand?.category)
-					? (p.expand.category as Array<{ title: string }>).map((s) => s.title)
-					: (p.expand?.category as { title?: string } | undefined)?.title
-						? [(p.expand.category as { title: string }).title]
+				const catExpand = p.expand?.category;
+				const serviceCategories: string[] = Array.isArray(catExpand)
+					? (catExpand as Array<{ title: string }>).map((s) => s.title)
+					: (catExpand as { title?: string } | undefined)?.title
+						? [(catExpand as { title: string }).title]
 						: [];
 
 				return {

@@ -1,24 +1,12 @@
 <script lang="ts">
-	import { page } from '$app/state';
-	import { error } from '@sveltejs/kit';
 	import NextMoveCta from '$lib/components/NextMoveCta.svelte';
-	import { categories, articles, type CategoryInfo } from '$lib/data/blog';
+	import type { PageData } from './$types';
 
-	let categoryInfo = $derived.by<CategoryInfo>(() => {
-		const param = (page.params.category ?? '').toLowerCase();
-		const cat = categories.find((c) => c.slug === param);
-		if (!cat) {
-			throw error(404, 'Category not found');
-		}
-		return cat;
-	});
+	let { data }: { data: PageData } = $props();
 
-	let catArticles = $derived(articles.filter((a) => a.categorySlug === categoryInfo.slug));
-
-	const filterList = [
-		{ name: 'All', count: articles.length.toString().padStart(2, '0'), slug: 'all' },
-		...categories.map((c) => ({ name: c.name, count: c.count, slug: c.slug }))
-	];
+	let categoryInfo = $derived(data.categoryInfo);
+	let catArticles = $derived(data.articles);
+	let filterList = $derived(data.filterList);
 </script>
 
 <svelte:head>
@@ -88,7 +76,7 @@
 <section class="border-b border-border-subtle/80 py-16 sm:py-24">
 	<div class="mx-auto max-w-360 px-4 sm:px-6 lg:px-12">
 		<div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-			{#each catArticles as art (art.slug)}
+			{#each catArticles as art (art.id || art.slug)}
 				<a
 					href="/blog/{art.slug}"
 					class="group flex flex-col justify-between border border-border-subtle bg-surface p-6 transition-all duration-200 hover:-translate-y-1 hover:border-[#ea9c5a]/40 hover:shadow-lg sm:p-7"

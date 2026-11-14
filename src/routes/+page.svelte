@@ -1,8 +1,12 @@
 <script lang="ts">
 	import SearchConsoleWidget from '$lib/components/SearchConsoleWidget.svelte';
 	import NextMoveCta from '$lib/components/NextMoveCta.svelte';
-	import { services } from '$lib/data/services';
-	import { articles } from '$lib/data/blog';
+	import type { PageData } from './$types';
+
+	let { data }: { data: PageData } = $props();
+
+	let services = $derived(data.services);
+	let articles = $derived(data.articles);
 
 	let openFaq = $state<number | null>(null);
 

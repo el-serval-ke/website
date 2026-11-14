@@ -1,19 +1,21 @@
 <script lang="ts">
 	import NextMoveCta from '$lib/components/NextMoveCta.svelte';
-	import { articles, categories } from '$lib/data/blog';
+	import type { PageData } from './$types';
+
+	let { data }: { data: PageData } = $props();
 
 	let activeCat = $state('All');
 
-	const filterList = [
-		{ name: 'All', count: articles.length.toString().padStart(2, '0'), slug: 'all' },
-		...categories.map((c) => ({ name: c.name, count: c.count, slug: c.slug }))
-	];
+	let filterList = $derived([
+		{ name: 'All', count: data.articles.length.toString().padStart(2, '0'), slug: 'all' },
+		...data.categories.map((c) => ({ name: c.name, count: c.count, slug: c.slug }))
+	]);
 
-	let editorPick = $derived(articles.find((a) => a.isEditorPick) || articles[0]);
+	let editorPick = $derived(data.articles.find((a) => a.isEditorPick) || data.articles[0]);
 	let filteredArticles = $derived(
 		activeCat === 'All'
-			? articles.filter((a) => a.slug !== editorPick.slug)
-			: articles.filter((a) => a.category === activeCat && a.slug !== editorPick.slug)
+			? data.articles.filter((a) => a.slug !== editorPick?.slug)
+			: data.articles.filter((a) => a.category === activeCat && a.slug !== editorPick?.slug)
 	);
 </script>
 
@@ -130,7 +132,7 @@
 		<h2 class="mb-10 font-serif text-2xl font-bold text-text-main sm:text-3xl">All articles</h2>
 
 		<div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-			{#each filteredArticles as art (art.slug)}
+			{#each filteredArticles as art (art.id || art.slug)}
 				<a
 					href="/blog/{art.slug}"
 					class="group flex flex-col justify-between border border-border-subtle bg-surface p-6 transition-all duration-200 hover:-translate-y-1 hover:border-[#ea9c5a]/40 hover:shadow-lg sm:p-7"

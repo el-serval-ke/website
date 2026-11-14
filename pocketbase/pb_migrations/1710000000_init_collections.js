@@ -114,7 +114,7 @@ migrate(
 					type: 'relation',
 					collectionId: services.id,
 					cascadeDelete: false,
-					maxSelect: null, // unlimited
+					maxSelect: 99, // unlimited multi-service relation
 					required: false
 				},
 				{ name: 'tags', type: 'json', required: false },

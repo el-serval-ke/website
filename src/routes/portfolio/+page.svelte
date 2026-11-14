@@ -1,15 +1,22 @@
 <script lang="ts">
 	import NextMoveCta from '$lib/components/NextMoveCta.svelte';
-	import { portfolioItems } from '$lib/data/portfolio';
+	import type { PageData } from './$types';
+
+	let { data }: { data: PageData } = $props();
 
 	let activeFilter = $state('All work');
 
-	const filters = ['All work', 'Web Development', 'Website Revamp', 'SEO Foundations'];
+	let filters = $derived(data.filters);
 
 	let filteredItems = $derived(
 		activeFilter === 'All work'
-			? portfolioItems
-			: portfolioItems.filter((item) => item.tags.includes(activeFilter))
+			? data.items
+			: data.items.filter(
+					(item) =>
+						item.tags.includes(activeFilter) ||
+						item.services.some((s) => s.title === activeFilter) ||
+						item.category.includes(activeFilter)
+				)
 	);
 </script>
 
@@ -70,7 +77,7 @@
 <section class="border-b border-border-subtle/80 py-16 sm:py-24">
 	<div class="mx-auto max-w-360 px-4 sm:px-6 lg:px-12">
 		<div class="grid grid-cols-1 gap-10 md:grid-cols-2 lg:grid-cols-3">
-			{#each filteredItems as item (item.slug)}
+			{#each filteredItems as item (item.id || item.slug)}
 				<a
 					href="/portfolio/{item.slug}"
 					class="group flex flex-col justify-between overflow-hidden border border-border-subtle bg-surface transition-all duration-300 hover:border-[#ea9c5a]/40 hover:shadow-2xl"
@@ -82,17 +89,30 @@
 								src={item.heroImage}
 								alt="{item.title} preview"
 								class="h-full w-full object-cover object-top transition-transform duration-500 group-hover:scale-105"
+								loading="lazy"
 							/>
 						</div>
 
 						<!-- Details -->
 						<div class="p-6 sm:p-7">
-							<div class="mb-3 flex items-center justify-between text-xs">
-								<span
-									class="border border-[#ea9c5a]/30 bg-[#341608] px-2.5 py-0.5 font-mono text-xs text-[#ea9c5a] uppercase"
-								>
-									{item.category}
-								</span>
+							<div class="mb-3 flex flex-wrap items-center justify-between gap-2 text-xs">
+								<div class="flex flex-wrap items-center gap-1.5">
+									{#if item.services && item.services.length > 0}
+										{#each item.services as s (s.id || s.slug)}
+											<span
+												class="border border-[#ea9c5a]/30 bg-[#341608] px-2 py-0.5 font-mono text-[11px] text-[#ea9c5a] uppercase"
+											>
+												{s.title}
+											</span>
+										{/each}
+									{:else}
+										<span
+											class="border border-[#ea9c5a]/30 bg-[#341608] px-2.5 py-0.5 font-mono text-xs text-[#ea9c5a] uppercase"
+										>
+											{item.category}
+										</span>
+									{/if}
+								</div>
 								<span class="font-mono text-text-dim">{item.timeline}</span>
 							</div>
 

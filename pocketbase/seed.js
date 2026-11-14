@@ -228,8 +228,12 @@ async function seed() {
 
 	for (const item of portfolioData) {
 		try {
-			await pb.collection('portfolio_items').getFirstListItem(`slug="${item.slug}"`);
-			console.log(`Portfolio item exists: ${item.title}`);
+			const existing = await pb
+				.collection('portfolio_items')
+				.getFirstListItem(`slug="${item.slug}"`);
+			const categoryIds = item.categoryServices.map((s) => serviceMap.get(s)).filter(Boolean);
+			await pb.collection('portfolio_items').update(existing.id, { category: categoryIds });
+			console.log(`Portfolio item updated: ${item.title}`);
 		} catch {
 			// Map service slugs to IDs for the relation field
 			const categoryIds = item.categoryServices.map((s) => serviceMap.get(s)).filter(Boolean);
